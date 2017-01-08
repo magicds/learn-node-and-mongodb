@@ -1,8 +1,9 @@
-doctype
-html
-    head
-        meta(charset="utf-8")
-        title #{title}
+extends ../layout
 
-    body
-        h1 #{title}
+block content
+    .container
+        .row            
+            form.form-horizontal(method="post", action="/admin/movie/new")
+                .form-group
+                    .label.col-md-3.control-label(for="inputTitle") 电影名称
+                    .input#inputTitle.form-control(type="text", name="move[title]")
