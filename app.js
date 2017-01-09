@@ -3,9 +3,20 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
 
+// mongoose
+var mongoose = require('mongoose');
+// data
+var Movie = require('./models/movie.js');
+
+// 此模块用于合并对象
+var underscore = require('underscore');
+
 var port = process.env.PORT || 3000;
 
 var app = express();
+
+// 链接数据库
+mongoose.connect('mongoose://localhost/movie');
 
 // 路径必须拼接上当前目录
 app.set('views', __dirname + '/views/pages');
@@ -13,7 +24,7 @@ app.set('views', __dirname + '/views/pages');
 // 处理格式
 app.use(bodyParser.json());
 
-app.use(express.static(path.join(__dirname,'bower_components')));
+app.use(express.static(path.join(__dirname, 'bower_components')));
 // app.set('./', './views');
 
 app.set('view engine', 'jade');
@@ -28,50 +39,110 @@ console.log('start on port:' + port);
  */
 // index page
 app.get('/', function (req, res) {
-    res.render('index', {
-        title: '首页',
-        movies: [{
-            title: '机械战警',
-            _id: 1,
-            poster: 'https://baidu.com'
-        }, {
-            title: '机械战警',
-            _id: 2,
-            poster: 'https://baidu.com'
-        }, {
-            title: '机械战警',
-            _id: 3,
-            poster: 'https://baidu.com'
-        }, {
-            title: '机械战警',
-            _id: 4,
-            poster: 'https://baidu.com'
-        }, {
-            title: '机械战警',
-            _id: 5,
-            poster: 'https://baidu.com'
-        }, {
-            title: '机械战警',
-            _id: 6,
-            poster: 'https://baidu.com'
-        }]
+    // 查询数据
+    Movie.fetch(function (err, movies) {
+        if (err) {
+            console.log(err);
+        }
+        res.render('index', {
+            title: '首页',
+            movies: movies
+        });
+
     });
+
+
+    // res.render('index', {
+    //     title: '首页',
+    //     movies: [{
+    //         title: '机械战警',
+    //         _id: 1,
+    //         poster: 'https://baidu.com'
+    //     }, {
+    //         title: '机械战警',
+    //         _id: 2,
+    //         poster: 'https://baidu.com'
+    //     }, {
+    //         title: '机械战警',
+    //         _id: 3,
+    //         poster: 'https://baidu.com'
+    //     }, {
+    //         title: '机械战警',
+    //         _id: 4,
+    //         poster: 'https://baidu.com'
+    //     }, {
+    //         title: '机械战警',
+    //         _id: 5,
+    //         poster: 'https://baidu.com'
+    //     }, {
+    //         title: '机械战警',
+    //         _id: 6,
+    //         poster: 'https://baidu.com'
+    //     }]
+    // });
 });
-// list page
-app.get('/admin/list', function (req, res) {
-    res.render('list', {
-        title: '列表页'
-    });
-});
+
 // detail page
 app.get('/movie/:id', function (req, res) {
-    res.render('detail', {
-        title: '详情页'
+    var id = req.params.id;
+
+    Movie.findById(id, function (err, movie) {
+        res.render('detail', {
+            title: movie.title,
+            movie: movie
+        });
+    });
+
+});
+
+// admin post movie
+app.post('/admin/movie/new', function (res, req) {
+
+    var movieObj = req.body.movie;
+    var id = movieObj._id;
+    var _movie;
+    // It is existed, need update
+    if (id !== undefined) {
+        Movie.findById(id, function (err, movie) {
+            if (err) {
+                console.log(err);
+            } else {
+                _movie = underscore.extend(movie, movieObj);
+                
+            }
+        });
+    } else {
+        _movie = new Movie({
+            doctor: movieObj.doctor,
+            title: movieObj.title,
+            language: movieObj.language,
+            country: movieObj.country,
+            summary: movieObj.summary,
+            flash: movieObj.flash,
+            poster: movieObj.poster,
+            year: movieObj.year
+        });        
+    }
+    // save data
+    _movie.save(function (err, movie) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.redirect('/movie/' + movie._id);
+        }
     });
 });
+
 // admin page
 app.get('/admin/movie', function (req, res) {
     res.render('admin', {
         title: '管理页'
+    });
+});
+
+// list page
+app.get('/admin/list', function (req, res) {
+    res.render('list', {
+        title: '列表页'
     });
 });
