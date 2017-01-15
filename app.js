@@ -69,7 +69,14 @@ app.get('/movie/:id', function (req, res) {
 
 // admin update movie
 app.get('/admin/update/:id',function(res,req){
-    
+    var id = req.params.id;
+
+    Movie.findById(id, function (err, movie) {
+        res.render('detail', {
+            title: movie.title,
+            movie: movie
+        });
+    });
 });
 
 
