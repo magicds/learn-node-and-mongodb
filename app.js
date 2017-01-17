@@ -93,8 +93,7 @@ app.post('/admin/movie/new', function (req, res) {
     var movieObj = req.body.movie;
     var id = movieObj._id;
     var _movie;
-    console.log(id);
-    console.log(id !== undefined);
+
     // It is existed, need update
     if (id !== 'undefined') {
         Movie.findById(id, function (err, movie) {
