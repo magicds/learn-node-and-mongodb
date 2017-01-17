@@ -16,15 +16,20 @@ var port = process.env.PORT || 3000;
 var app = express();
 
 // 链接数据库
-mongoose.connect('mongoose://localhost/movie');
+mongoose.connect('mongodb://localhost/movie');
+mongoose.connection.on('connected', function () {
+    console.log('Connection success!');
+});
 
 // 路径必须拼接上当前目录
 app.set('views', __dirname + '/views/pages');
 
-// 处理格式
-app.use(bodyParser.json());
+// 处理格式 解析json 解析表单等数据
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-app.use(express.static(path.join(__dirname, 'bower_components')));
+app.use(express.static(path.join(__dirname, 'public')));
+app.locals.moment = require('moment');
 // app.set('./', './views');
 
 app.set('view engine', 'jade');
@@ -68,32 +73,35 @@ app.get('/movie/:id', function (req, res) {
 });
 
 // admin update movie
-app.get('/admin/update/:id',function(res,req){
+app.get('/admin/update/:id', function (req, res) {
     var id = req.params.id;
 
-    Movie.findById(id, function (err, movie) {
-        res.render('detail', {
-            title: movie.title,
-            movie: movie
+    if (id) {
+        Movie.findById(id, function (err, movie) {
+            res.render('admin', {
+                title: movie.title + '更新页',
+                movie: movie
+            });
         });
-    });
+    }
 });
 
 
 // admin post movie
-app.post('/admin/movie/new', function (res, req) {
-
+app.post('/admin/movie/new', function (req, res) {
+    
     var movieObj = req.body.movie;
     var id = movieObj._id;
     var _movie;
+    console.log(id);
+    console.log(id !== undefined);
     // It is existed, need update
-    if (id !== undefined) {
+    if (id !== 'undefined') {
         Movie.findById(id, function (err, movie) {
             if (err) {
                 console.log(err);
             } else {
                 _movie = underscore.extend(movie, movieObj);
-                
             }
         });
     } else {
@@ -106,7 +114,7 @@ app.post('/admin/movie/new', function (res, req) {
             flash: movieObj.flash,
             poster: movieObj.poster,
             year: movieObj.year
-        });        
+        });
     }
     // save data
     _movie.save(function (err, movie) {
@@ -138,10 +146,37 @@ app.get('/admin/list', function (req, res) {
 
 
 // admin page
-app.get('/admin/movie', function (req, res) {   
-    
-    
+app.get('/admin/movie', function (req, res) {
     res.render('admin', {
-        title: '管理页'
+        title: '后台录入',
+        movie: {
+            title: '',
+            doctor: '',
+            country: '',
+            language: '',
+            summary: '',
+            year: '',
+            flash: '',
+            poster: ''
+        }
     });
+});
+
+
+// delete
+app.delete('/admin/list', function (req, res) {
+    var id = req.query.id;
+    if (id) {
+        Movie.remove({
+            _id: id
+        }, function (err, movie) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json({
+                    success: 1
+                });
+            }
+        });
+    }
 });
