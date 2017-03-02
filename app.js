@@ -61,9 +61,11 @@ app.get('/', function (req, res) {
 
 // detail page
 app.get('/movie/:id', function (req, res) {
+    console.log('req :' + req);
     var id = req.params.id;
-
+    console.log('id :' + id);
     Movie.findById(id, function (err, movie) {
+        console.log(movie);
         res.render('detail', {
             title: movie.title,
             movie: movie
@@ -101,6 +103,13 @@ app.post('/admin/movie/new', function (req, res) {
                 console.log(err);
             } else {
                 _movie = underscore.extend(movie, movieObj);
+                _movie.save(function (err, movie) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        res.redirect('/movie/' + movie._id);
+                    }
+                });
             }
         });
     } else {
@@ -114,15 +123,16 @@ app.post('/admin/movie/new', function (req, res) {
             poster: movieObj.poster,
             year: movieObj.year
         });
+        // save data
+        _movie.save(function (err, movie) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.redirect('/movie/' + movie._id);
+            }
+        });
     }
-    // save data
-    _movie.save(function (err, movie) {
-        if (err) {
-            console.log(err);
-        } else {
-            res.redirect('/movie/' + movie._id);
-        }
-    });
+    
 });
 
 
@@ -164,6 +174,7 @@ app.get('/admin/movie', function (req, res) {
 
 // delete
 app.delete('/admin/list', function (req, res) {
+    console.log(req);
     var id = req.query.id;
     if (id) {
         Movie.remove({
@@ -177,5 +188,5 @@ app.delete('/admin/list', function (req, res) {
                 });
             }
         });
-    }
+    } 
 });

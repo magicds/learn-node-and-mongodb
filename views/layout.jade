@@ -5,7 +5,9 @@ html
         title #{title}
         include ./includes/head
     body
-        include ./includes/header
-        h1 #{title}
-        block content
+        //- include ./includes/header
+        .container
+            h1 #{title}
+            hr
+            block content
         
