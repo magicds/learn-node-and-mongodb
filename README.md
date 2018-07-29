@@ -1,11 +1,9 @@
 # learn-node-and-mongodb 
 
-这是学习
+这是学习 [node建站攻略(二期)——网站升级](http://www.imooc.com/learn/197) 课程练习的源代码
 
-[node+mongodb 建站攻略（一期）](http://www.imooc.com/learn/75) 
+> 分支 `V1` 为一期。
 
-[node建站攻略(二期)——网站升级](http://www.imooc.com/learn/197)
+## 配置
 
-课程练习的源代码
-
-标签V1为一期。
+拷贝 `config.demo.js` 为 `config.js` , 在其中配置用于MongoDB的授权用户信息

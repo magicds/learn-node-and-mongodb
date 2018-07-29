@@ -1,22 +1,27 @@
-var express = require('express');
+const express = require('express');
 // 此模块已经出express中抽出 用于替代之前express.bodyParser()
-var bodyParser = require('body-parser');
-var path = require('path');
+const bodyParser = require('body-parser');
+const path = require('path');
 
 // mongoose
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 // data
-var Movie = require('./models/movie.js');
+const Movie = require('./models/movie.js');
 
 // 此模块用于合并对象
-var underscore = require('underscore');
+const underscore = require('underscore');
 
-var port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
-var app = express();
+// 配置
+const config = require('./config.js');
+const dbCfg = config.db;
+
+const app = express();
 
 // 链接数据库
-mongoose.connect('mongodb://localhost/movie');
+const dbConnectionStr = `${dbCfg.username}:${dbCfg.password}@mongodb://localhost/movie`;
+mongoose.connect(dbConnectionStr);
 mongoose.connection.on('connected', function () {
     console.log('Connection success!');
 });
@@ -26,7 +31,9 @@ app.set('views', __dirname + '/views/pages');
 
 // 处理格式 解析json 解析表单等数据
 app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({
+    extended: true
+})); // for parsing application/x-www-form-urlencoded
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.locals.moment = require('moment');
@@ -91,7 +98,7 @@ app.get('/admin/update/:id', function (req, res) {
 
 // admin post movie
 app.post('/admin/movie/new', function (req, res) {
-    
+
     var movieObj = req.body.movie;
     var id = movieObj._id;
     var _movie;
@@ -132,7 +139,7 @@ app.post('/admin/movie/new', function (req, res) {
             }
         });
     }
-    
+
 });
 
 
@@ -188,5 +195,5 @@ app.delete('/admin/list', function (req, res) {
                 });
             }
         });
-    } 
+    }
 });
