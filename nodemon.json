@@ -1,0 +1,26 @@
+{
+    "restartable": "【re-rtart】",
+    "verbose": true,
+    "ignore": [
+        ".git",
+        "node_modules/**/node_modules"
+
+    ],
+    "execMap": {
+        "": "node",
+        "js": "node --harmony"
+    },
+    "wtach": [
+        "public",
+        "schemas",
+        "views",
+        "models"
+    ],
+    "env": {
+        "PORT": 3000
+    },
+    "legacy-watch": true,
+    "ext": "js json",
+    "colous": true,
+    "delay": 200
+}
