@@ -20,8 +20,11 @@ const dbCfg = config.db;
 const app = express();
 
 // 链接数据库
-const dbConnectionStr = `${dbCfg.username}:${dbCfg.password}@mongodb://localhost/movie`;
-mongoose.connect(dbConnectionStr);
+const dbConnectionStr = `mongodb://${dbCfg.username}:${dbCfg.password}@localhost:${dbCfg.post}/movie`;
+console.log(dbConnectionStr);
+mongoose.connect(dbConnectionStr, {
+    useMongoClient: true
+});
 mongoose.connection.on('connected', function () {
     console.log('Connection success!');
 });
@@ -45,7 +48,6 @@ app.listen(port);
 
 console.log('start on port:' + port);
 
-
 /**
  * 路由配置
  */
@@ -57,6 +59,7 @@ app.get('/', function (req, res) {
         if (err) {
             console.log(err);
         }
+        console.log(movies);
         res.render('index', {
             title: '首页',
             movies: movies

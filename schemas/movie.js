@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 var MovieSchema = new mongoose.Schema({
     doctor: String,
     title: String,

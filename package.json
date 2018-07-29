@@ -4,11 +4,12 @@
   "description": "node-mongodb-build-website-1",
   "main": "app.js",
   "dependencies": {
-    "express": "^4.14.0",
+    "bluebird": "^3.5.1",
     "body-parser": "^1.15.2",
+    "express": "^4.14.0",
     "jade": "^1.11.0",
-    "mongoose": "^4.7.6",
     "moment": "^2.17.1",
+    "mongoose": "^4.7.6",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
@@ -16,6 +17,7 @@
     "nodemon": "^1.18.3"
   },
   "scripts": {
+    "install-client": "bower instll jquery bootstrap",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
