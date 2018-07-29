@@ -1,6 +1,6 @@
 {
   "name": "node-mongodb-build-website-1",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "node-mongodb-build-website-1",
   "main": "app.js",
   "dependencies": {
