@@ -1,0 +1,28 @@
+{
+  "name": "node-mongodb-build-website-1",
+  "description": "node-mongodb-build-website-1",
+  "main": "none",
+  "authors": [
+    "cdswyda"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "node",
+    "mongodb",
+    "express",
+    "bootstrap"
+  ],
+  "dependencies": {
+    "jquery": "3.1.1",
+    "bootstrap": "3.3.7"
+  },
+  "homepage": "https://github.com/cdswyda/learn-node-and-mongodb",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/libs",
+    "test",
+    "tests"
+  ]
+}
