@@ -2,11 +2,13 @@ const express = require('express');
 // 此模块已经出express中抽出 用于替代之前express.bodyParser()
 const bodyParser = require('body-parser');
 const path = require('path');
-
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 // mongoose
 const mongoose = require('mongoose');
 // data
 const Movie = require('./models/movie.js');
+const User = require('./models/user.js');
 
 // 此模块用于合并对象
 const underscore = require('underscore');
@@ -37,7 +39,15 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({
     extended: true
 })); // for parsing application/x-www-form-urlencoded
-
+app.use(session({
+    secret: 'learn node',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: true
+    }
+}));
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.locals.moment = require('moment');
 // app.set('./', './views');
@@ -162,6 +172,22 @@ app.get('/admin/list', function (req, res) {
     });
 });
 
+// list page
+app.get('/admin/userlist', function (req, res) {
+    // 查询数据
+    User.fetch(function (err, users) {
+        console.log(err, users);
+        if (err) {
+            console.log(err);
+        }
+        res.render('userlist', {
+            title: '列表页',
+            users: users
+        });
+
+    });
+});
+
 
 
 // admin page
@@ -199,4 +225,56 @@ app.delete('/admin/list', function (req, res) {
             }
         });
     }
+});
+
+// signup
+app.post('/user/signup', function (req, res) {
+    // const user = req.param('user');
+    const _user = req.body.user;
+    const user = new User(_user);
+    User.findOne({
+        name: _user.name
+    }, (err, auser) => {
+        if (err) {
+            console.log(err);
+        }
+        if (auser) {
+            res.redirect('/');
+        } else {
+            user.save((err, user) => {
+                if (err) throw err;
+                console.log(user);
+                res.redirect('/');
+            });
+        }
+    })
+});
+
+// signin
+app.post('/user/signin', function (req, res) {
+    // const user = req.param('user');
+    const _user = req.body.user;
+
+    User.findOne({
+        name: _user.name
+    }, (err, auser) => {
+        if (err) {
+            console.log(err);
+        }
+        if (!auser) {
+            return res.redirect('/signup')
+        }
+
+        auser.comparePassword(_user.password).then(function (isMatch) {
+            if (isMatch) {
+                console.log('signin success!');
+                req.session.user = auser;
+                return res.redirect('/');
+            } else {
+                return res.redirect('/signin');
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+    })
 });
