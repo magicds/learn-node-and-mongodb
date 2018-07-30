@@ -39,6 +39,8 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({
     extended: true
 })); // for parsing application/x-www-form-urlencoded
+
+app.use(cookieParser());
 app.use(session({
     secret: 'learn node',
     resave: false,
@@ -47,7 +49,6 @@ app.use(session({
         secure: true
     }
 }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.locals.moment = require('moment');
 // app.set('./', './views');
@@ -64,6 +65,7 @@ console.log('start on port:' + port);
 
 // index page
 app.get('/', function (req, res) {
+    console.log(req.session);
     // 查询数据
     Movie.fetch(function (err, movies) {
         if (err) {
