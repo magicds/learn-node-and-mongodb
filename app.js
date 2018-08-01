@@ -35,7 +35,6 @@ mongoose.connection.on('connected', function () {
 app.set('views', __dirname + '/views/pages');
 
 // 处理格式 解析json 解析表单等数据
-// for parsing application/json
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({
     // for parsing application/x-www-form-urlencoded
