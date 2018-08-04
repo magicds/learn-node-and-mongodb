@@ -9,9 +9,6 @@ const mongoStore = require('connect-mongo')(session);
 // mongoose
 const mongoose = require('mongoose');
 
-// 此模块用于合并对象
-const underscore = require('underscore');
-
 const port = process.env.PORT || 3000;
 
 // 配置
@@ -31,7 +28,7 @@ mongoose.connection.on('connected', function () {
 });
 
 // 路径必须拼接上当前目录
-app.set('views', __dirname + '/views/pages');
+app.set('views', __dirname + '/app/views/pages');
 
 // 处理格式 解析json 解析表单等数据
 app.use(bodyParser.json());
