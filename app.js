@@ -72,12 +72,15 @@ console.log('start on port:' + port);
 /**
  * 路由配置
  */
-
-// index page
-app.get('/', function (req, res) {
+app.use(function (req, res, next) {
     console.log(req.session);
     var _user = req.session.user;
     app.locals.user = _user ? _user : null;
+    return next();
+});
+// index page
+app.get('/', function (req, res) {
+
     // 查询数据
     Movie.fetch(function (err, movies) {
         if (err) {
