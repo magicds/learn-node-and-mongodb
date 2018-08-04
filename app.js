@@ -76,6 +76,8 @@ console.log('start on port:' + port);
 // index page
 app.get('/', function (req, res) {
     console.log(req.session);
+    var _user = req.session.user;
+    app.locals.user = _user ? _user : null;
     // 查询数据
     Movie.fetch(function (err, movies) {
         if (err) {
@@ -289,4 +291,11 @@ app.post('/user/signin', function (req, res) {
             console.log(err);
         })
     })
+});
+
+// logout
+app.get('/logout', function (req, res) {
+    delete req.session.user;
+    delete app.locals.user;
+    res.redirect('/');
 });
