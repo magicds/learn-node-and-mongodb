@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const session = require('express-session');
+const mongoStore = require('connect-mongo')(session);
 // const cookieParser = require('cookie-parser'); express-session 1.5 之后就不依赖这个了
 // mongoose
 const mongoose = require('mongoose');
@@ -35,15 +36,19 @@ mongoose.connection.on('connected', function () {
 app.set('views', __dirname + '/views/pages');
 
 // 处理格式 解析json 解析表单等数据
-app.use(bodyParser.json()); 
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     // for parsing application/x-www-form-urlencoded
     extended: true
-})); 
+}));
 // Note Since version 1.5.0, the cookie-parser middleware no longer needs to be used for this module to work. This module now directly reads and writes cookies on req/res. Using cookie-parser may result in issues if the secret is not the same between this module and cookie-parser.
 // app.use(cookieParser());
 app.use(session({
     secret: 'learn node',
+    store: new mongoStore({
+        url: dbConnectionStr,
+        collection: 'sessions'
+    }),
     resave: false,
     saveUninitialized: true,
     cookie: {
