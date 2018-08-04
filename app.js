@@ -1,4 +1,5 @@
 const express = require('express');
+const logger = require('morgan');
 // 此模块已经出express中抽出 用于替代之前express.bodyParser()
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -61,6 +62,15 @@ app.locals.moment = require('moment');
 // app.set('./', './views');
 
 app.set('view engine', 'jade');
+
+// 配置
+const env = process.env.NODE_ENV || 'development';
+if ('development' == env) {
+    app.set('showStackError', true);
+    app.use(logger(':method :url :status'));
+    app.locals.pretty = true;
+    mongoose.set('debug', true);
+}
 
 // 引入路由
 require('./router/router')(app);

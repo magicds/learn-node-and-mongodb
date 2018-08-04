@@ -8,7 +8,7 @@ module.exports = function (app) {
      * 路由配置
      */
     app.use(function (req, res, next) {
-        console.log(req.session);
+        // console.log(req.session);
         var _user = req.session.user;
         app.locals.user = _user ? _user : null;
         return next();
@@ -21,7 +21,7 @@ module.exports = function (app) {
             if (err) {
                 console.log(err);
             }
-            console.log(movies);
+            // console.log(movies);
             res.render('index', {
                 title: '首页',
                 movies: movies
