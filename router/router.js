@@ -8,8 +8,9 @@ module.exports = function (app) {
      */
     app.use(function (req, res, next) {
         // console.log(req.session);
-        var _user = req.session.user;
-        app.locals.user = _user ? _user : null;
+        // var _user = req.session.user;
+        // app.locals.user = _user ? _user : null;
+        app.locals.user = req.session.user;
         return next();
     });
     // index page
