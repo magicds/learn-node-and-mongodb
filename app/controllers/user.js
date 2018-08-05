@@ -11,7 +11,7 @@ exports.signup = function (req, res) {
             console.log(err);
         }
         if (auser) {
-            res.redirect('/');
+            res.redirect('/signin');
         } else {
             user.save((err, user) => {
                 if (err) throw err;
@@ -21,6 +21,19 @@ exports.signup = function (req, res) {
         }
     })
 }
+
+exports.showSignup = function (req, res) {
+    res.render('signup', {
+        title: '注册'
+    });
+}
+
+exports.showSignin = function (req, res) {
+    res.render('signin', {
+        title: '登录'
+    });
+}
+
 exports.signin = function (req, res) {
     // const user = req.param('user');
     const _user = req.body.user;
