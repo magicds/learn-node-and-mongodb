@@ -80,3 +80,18 @@ exports.userList = function (req, res) {
         })
     })
 }
+
+exports.signinRequired =function (req,res,next) {
+    const user = req.session.user;
+    if(!user) {
+        return res.redirect('/signin');
+    }
+    next();
+}
+exports.adminRequired =function (req,res,next) {
+    const user = req.session.user;
+    if(user.role < 10) {
+        return res.redirect('/signin');
+    }
+    next();
+}

@@ -100,6 +100,11 @@ exports.detail = function (req, res) {
     console.log('id :' + id);
     Movie.findById(id, function (err, movie) {
         console.log(movie);
+        if (!movie) {
+            movie = new Movie({
+                title: '未找到'
+            });
+        }
         res.render('detail', {
             title: movie.title,
             movie: movie

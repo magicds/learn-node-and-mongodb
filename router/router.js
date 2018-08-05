@@ -23,7 +23,7 @@ module.exports = function (app) {
     app.post('/user/signin', User.signin);
     app.get('/signin', User.showSignin);
     app.get('/signup', User.showSignup);
-    app.get('/admin/userlist', User.userList);
+    app.get('/admin/user/list', User.signinRequired, User.adminRequired, User.userList);
     // logout
     app.get('/logout', User.logout);
 
@@ -32,11 +32,11 @@ module.exports = function (app) {
     app.get('/movie/:id', Movie.detail);
     app.get('/admin/movie/new', Movie.new);
     // admin update movie
-    app.get('/admin/update/:id', Movie.update);
+    app.get('/admin/move/update/:id', Movie.update);
     // admin post movie
     app.post('/admin/movie', Movie.save);
     // list page
-    app.get('/admin/list', Movie.list);
+    app.get('/admin/movie/list', Movie.list);
     // delete
-    app.delete('/admin/list', Movie.delete);
+    app.delete('/admin/movie/list', Movie.delete);
 }
