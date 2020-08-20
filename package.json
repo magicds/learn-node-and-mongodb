@@ -4,7 +4,7 @@
   "description": "node-mongodb-build-website-1",
   "main": "app.js",
   "dependencies": {
-    "bcrypt": "^3.0.0",
+    "bcrypt": "^5.0.0",
     "bluebird": "^3.5.1",
     "body-parser": "^1.15.2",
     "connect-mongo": "^2.0.1",
